@@ -1,9 +1,18 @@
 import { streamText, UIMessage, convertToModelMessages } from 'ai';
 import { google } from '@ai-sdk/google';
+import { NextRequest, NextResponse } from "next/server";
 
 
 // Allow streaming responses up to 30 seconds
 const maxDuration = 30;
+
+//req is short for request
+export async function GET(req: NextRequest) {
+  return NextResponse.json(
+    { message: "Ton API pour RAG est healthy" },
+    { status: 200 }
+  );
+}
 
 export async function POST(req: Request) {
   const {
