@@ -1,8 +1,4 @@
-Voici une version réorganisée de ton projet _Medicament-AICe_ sans suppression des informations :
-
----
-
-### **Projet Medicament-AICe**
+---### **Projet Medicament-AICe**
 
 Le projet vise à créer un système de questions-réponses intelligent sur les médicaments, basé sur des données structurées (Excel), non structurées (PDF) et des sources web fiables.
 
@@ -15,6 +11,11 @@ Le projet vise à créer un système de questions-réponses intelligent sur les 
 - **Déploiement** : Vercel
 
 ---
+
+### Use cases :
+
+- **1-statistiques sur la base de données**: combien de médicament existe dans la base de données ?
+- **2-questions sur un médicament, un dci,... statut d'autorisation, spécifique au cote d'ivoire** : "Liste les médicaments ayant le DCI 'Paracétamol' -**3-question d'ordre général**: grace à notre agent qui fait des recherches dans une documentation pharmaceutique bien précise et qui a accès au site web bien reconnue..
 
 ### **Étapes du Projet**
 
@@ -100,11 +101,11 @@ The API should now be running on [http://localhost:3000](http://localhost:3000).
 
 Check dans un premier lieu le API qui indique le bon fonctionnement de l'application :
 
-envoie avec un GET : http://localhost:3000/api/chat --> tu vas recevoir une réponse : 
+envoie avec un GET : http://localhost:3000/api/chat --> tu vas recevoir une réponse :
 
 {
-    "message": "Ton API pour RAG est healthy"
-} 
+"message": "Ton API pour RAG est healthy"
+}
 
 ### Informations sur le projet
 
