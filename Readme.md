@@ -1,4 +1,8 @@
----### **Projet Medicament-AICe**
+add :
+
+- BM25 search : https://js.langchain.com/docs/integrations/retrievers/bm25/
+
+### **Projet Medicament-AICe**
 
 Le projet vise à créer un système de questions-réponses intelligent sur les médicaments, basé sur des données structurées (Excel), non structurées (PDF) et des sources web fiables.
 

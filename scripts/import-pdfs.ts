@@ -1,14 +1,14 @@
 import { createResource } from '@/lib/actions/resources';
 import fs from 'fs/promises';
 import path from 'path';
-import pdf from 'pdf-parse';
+import { pdf } from 'pdf-parse';
 import 'dotenv/config';
 
 console.log("Lancement du script d'importation et de vectorisation des PDF...");
 
 // --- Configuration ---
 // Dossier où les documents PDF sont stockés.
-const PDF_DIRECTORY = path.join(process.cwd(), 'data/books');
+const PDF_DIRECTORY = path.join(process.cwd(), 'data/books/Batch2');
 
 // --- Fonction pour lire les fichiers PDF d'un dossier ---
 async function getPdfFiles(directory: string): Promise<string[]> {
