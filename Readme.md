@@ -65,12 +65,17 @@ Le projet vise à créer un système de questions-réponses intelligent sur les 
 
 #### **Migration de la base de données**
 
-1. Cette commande va créer les tables dans ta base de données en se basant sur les schémas définis dans `lib/db/schema/` :
+1. ajouter les extensions vectors pour traiter les embeddings et unaccent pour enlever la sensibilié à la casse :
 
-   ```bash
-   npm run db:generate
-   npm run db:migrate
-   ```
+`CREATE EXTENSION IF NOT EXISTS unaccent;`
+`CREATE EXTENSION IF NOT EXISTS vector;`
+
+2.  Cette commande va créer les tables dans ta base de données en se basant sur les schémas définis dans `lib/db/schema/` :
+
+```bash
+npm run db:generate
+npm run db:migrate
+```
 
 #### **Importer les données initiales**
 

@@ -24,7 +24,9 @@ export async function POST(req: Request) {
 1. **Identifier le type de question** : 
    - Si la question porte sur un **médicament spécifique** ou des informations cliniques, suis le processus "Médicament spécifique".
    - Si la question est plus **générale** (classes de médicaments, conditions médicales, recommandations), suis le processus "Question générale".
-   - Si la question porte sur des **statistiques ou un comptage** dans la base de données (ex: "combien de...", "liste tous les..."), utilise l'outil \`queryDatabaseTool\` pour générer une requête SQL appropriée (ex: \`SELECT COUNT(*) FROM medicaments;\`), **puis formule une réponse claire avec le résultat obtenu.**
+   - Si la question demande de **lister des médicaments** (ex: "liste les médicaments avec le DCI Paracétamol"), utilise l'outil \`queryDatabaseTool\` pour générer une requête SQL large et insensible à la casse et aux accents (ex: \`SELECT * FROM medicaments WHERE unaccent(dci) ILIKE '%paracetamol%'\`).
+   - Si la question demande un **comptage** (ex: "combien de..."), utilise \`queryDatabaseTool\` pour générer une requête de type \`SELECT COUNT(*)\`. Puis formule une réponse claire.
+   - Après avoir exécuté la requête, **formule une réponse claire avec les résultats**. Si aucun résultat n'est trouvé pour une liste, explique les raisons possibles (combinaisons, orthographe différente).
 
 2. **Processus de réponse** :
    - **Pour un médicament spécifique** :
@@ -46,9 +48,9 @@ export async function POST(req: Request) {
 
     // Tous les outils sont maintenant disponibles en permanence pour l'IA.
     tools: {
-      queryDatabaseTool,
       searchDocumentsTool,
       webSearchTool,
+      queryDatabaseTool,
     },
     messages: convertToModelMessages(messages),
   });
