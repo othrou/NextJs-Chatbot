@@ -1,4 +1,4 @@
-import { streamText, UIMessage, convertToModelMessages } from 'ai';
+import { streamText, UIMessage, convertToModelMessages, stepCountIs } from 'ai';
 import { google } from '@ai-sdk/google';
 
 // Import de nos outils personnalisés
@@ -15,13 +15,16 @@ export async function POST(req: Request) {
 
   const result = streamText({
     // Le modèle est fixe et défini ici.
-    model: google('models/gemini-2.0-flash'),
+    model: google('models/gemini-2.0-flash-lite'),
+    stopWhen: stepCountIs(5),
+    
     
     // Le system prompt est ajusté pour indiquer que tous les outils sont toujours disponibles.
-
+    
     system: SYSTEM_PROMPT ,
 
     // Tous les outils sont maintenant disponibles en permanence pour l'IA.
+    
     tools: {
       webSearchTool,
       searchDocumentsTool,
@@ -44,9 +47,10 @@ export async function POST(req: Request) {
 
   // La réponse est streamée vers le client.
   return result.toUIMessageStreamResponse({
+    sendStart: true,
+    sendFinish: true,
     sendSources: true,
     sendReasoning: true,
   });
 }
-
 

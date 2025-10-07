@@ -23,9 +23,11 @@ export const searchDocumentsTool = tool({
             console.log(`Recherche dans les documents pour la question : "${question}"`);
             const relevantContent = await findRelevantContent(question);
             console.log("Contenu pertinent trouvé :", relevantContent);
-            return relevantContent.length > 0
-                ? relevantContent
-                : "Aucune information pertinente n'a été trouvée dans les documents internes pour cette question.";
+            if (relevantContent.length > 0) {
+                // On convertit le résultat en JSON pour une meilleure interprétation par le modèle.
+                return JSON.stringify(relevantContent);
+            }
+            return "Aucune information pertinente n'a été trouvée dans les documents internes pour cette question.";
         } catch (error) {
             console.error("Erreur lors de la recherche dans les documents :", error);
             return { error: `Erreur de recherche: ${(error as Error).message}` };

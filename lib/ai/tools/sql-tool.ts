@@ -50,10 +50,10 @@ Les résultats de ces requêtes seront exploités par un agent spécialiste pour
   execute: async ({ query }) => {
     try {
       console.log(`Exécution de la requête SQL générée par l'IA : ${query}`);
-      // Exécute la requête directement, une approche simple mais à valider et sécuriser dans un cadre de production pour éviter les injections SQL.
       const result = await db.execute(sql.raw(query));
       console.log("Résultat de la requête :", result);
-      return result;
+      // Convertir le résultat en une chaîne JSON pour que le modèle puisse le traiter plus facilement.
+      return JSON.stringify(result);
     } catch (error) {
       console.error("Erreur lors de l'exécution de la requête SQL :", error);
       // Retourne l'erreur à l'IA

@@ -1,6 +1,7 @@
 add :
 
 - BM25 search : https://js.langchain.com/docs/integrations/retrievers/bm25/
+- tavily : https://docs.tavily.com/documentation/integrations/vercel
 
 ### **Projet Medicament-AICe**
 
