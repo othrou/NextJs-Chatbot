@@ -20,16 +20,13 @@ Table "medicaments" :
   - statut_autorisation (text)
 
 Exemples de questions que l'utilisateur pourrait poser :
-- "Quel est le statut d'autorisation pour le médicament XYZ ?"
-- "Donne-moi tous les médicaments fournis par l'Inde."
-- "Quel est le DCI de KOMBOGLYZE ?"
+
 - "Liste les médicaments ayant le DCI 'Paracétamol'.", dans ce cas, la requête doit utiliser l'opérateur ILIKE pour une recherche insensible à la casse : 'SELECT nom_commercial_ci FROM medicaments WHERE unaccent(LOWER(dci)) ILIKE '%Paracétamol%';'
 
 **Notes importantes :**
 - **Requêtes uniquement de type SELECT** sont autorisées.
+- les requetes de recherche de texte doivent nécessairement utiliser : unaccent(LOWER(dci)) LIKE '%motcle%'.
 - Pour rechercher un DCI spécifique, utilisez la fonction (unaccent(LOWER(dci)) LIKE '%motcle%') pour une recherche insensible aux accents et à la casse.
-- Lorsque vous interrogez des champs comme (score_similarite), qui peuvent avoir des valeurs numériques ou textuelles, assurez-vous que les données soient bien extraites sous un format exploitable pour la visualisation.
-- Lorsque vous interrogez des données temporelles, assurez-vous de renvoyer les résultats par année si cela est applicable. Par exemple, "Évolution du score de similarité au fil des années".
 
 Quelques exemples de données disponibles :
 - **Nom commercial**: Nom du médicament tel qu'il est commercialisé.
@@ -40,15 +37,15 @@ Quelques exemples de données disponibles :
 - **Statut d'autorisation**: Le statut réglementaire du médicament (par exemple, approuvé, en attente).
 
 ** important: **
-
-Les résultats de ces requêtes seront exploités par un agent spécialiste pour des actions ou analyses supplémentaires dans le cadre de leur expertise sur la base de données ivoirienne.`,
+- utilise toujours en cas de recherche des requetes de la forme : unaccent(LOWER(dci)) ILIKE '%motcle%' ou unaccent(LOWER(nom_commercial_ci)) ILIKE '%motcle%'.
+`,
   
   inputSchema: z.object({
     query: z.string().describe("La requête SQL à exécuter. Elle doit être une requête SELECT valide pour PostgreSQL."),
   }),
   
   execute: async ({ query }) => {
-    try {
+      try {
       console.log(`Exécution de la requête SQL générée par l'IA : ${query}`);
       const result = await db.execute(sql.raw(query));
       console.log("Résultat de la requête :", result);
@@ -58,6 +55,16 @@ Les résultats de ces requêtes seront exploités par un agent spécialiste pour
       console.error("Erreur lors de l'exécution de la requête SQL :", error);
       // Retourne l'erreur à l'IA
       return { error: `Erreur d'exécution: ${(error as Error).message}` };
-    }
-  },
-});
+    }}
+
+  })
+  
+
+
+
+
+
+
+
+
+
