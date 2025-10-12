@@ -1,70 +1,82 @@
 import { db } from '@/lib/db';
-import { medicaments } from '@/lib/db/schema/medicament';
-import { tool } from 'ai';
+import { Output, tool } from 'ai';
 import { z } from 'zod';
 import { sql } from 'drizzle-orm';
 
-// Cet outil permet à l'IA de générer et d'exécuter des requêtes SQL
-// directement sur notre base de données des médicaments.
-
 export const queryDatabaseTool = tool({
-  description: `Vous êtes un expert en SQL (PostgreSQL). Votre rôle est d'aider l'utilisateur à écrire une requête SQL pour récupérer les données dont il a besoin, en vous basant sur la structure de la table suivante :
+  description: `Interroge la base de données PostgreSQL des médicaments disponibles en Côte d'Ivoire.
 
-Table "medicaments" :
-  - id (integer, clé primaire)
-  - nom_commercial_ci (text)
-  - dci (text)
-  - similarite_base_francaise (text)
-  - score_similarite (varchar)
-  - pays_fournisseur (text)
-  - statut_autorisation (text)
+**Structure de la table "medicaments" :**
+- id (integer, clé primaire)
+- nom_commercial_ci (text) - Nom commercial du médicament
+- dci (text) - Dénomination Commune Internationale (peut contenir plusieurs principes actifs séparés par '+')
+- similarite_base_francaise (text)
+- score_similarite (varchar)
+- pays_fournisseur (text) - Pays d'origine
+- statut_autorisation (text) - Statut réglementaire
 
-Exemples de questions que l'utilisateur pourrait poser :
+**Cas d'usage :**
+✅ Rechercher un médicament par nom commercial ou DCI
+✅ Lister les médicaments contenant un principe actif spécifique
+✅ Obtenir le pays fournisseur et le statut d'autorisation
+✅ Compter les médicaments répondant à des critères
+✅ Vérifier l'existence d'un médicament dans la base
 
-- "Liste les médicaments ayant le DCI 'Paracétamol'.", dans ce cas, la requête doit utiliser l'opérateur ILIKE pour une recherche insensible à la casse : 'SELECT nom_commercial_ci FROM medicaments WHERE unaccent(LOWER(dci)) ILIKE '%Paracétamol%';'
+**IMPORTANT : Recherche de médicaments**
+- Pour trouver "Doliprane", utilise : WHERE unaccent(LOWER(nom_commercial_ci)) ILIKE '%doliprane%' AND unaccent(LOWER(nom_commercial_ci)) NOT ILIKE '%codo% limit 2;'
+- Cela évite de confondre Doliprane avec Codoliprane
+- Si besoin de médicaments similaires, fais une requête séparée
 
-**Notes importantes :**
-- **Requêtes uniquement de type SELECT** sont autorisées.
-- les requetes de recherche de texte doivent nécessairement utiliser : unaccent(LOWER(dci)) LIKE '%motcle%'.
-- Pour rechercher un DCI spécifique, utilisez la fonction (unaccent(LOWER(dci)) LIKE '%motcle%') pour une recherche insensible aux accents et à la casse.
+**Règles SQL OBLIGATOIRES :**
+- UNIQUEMENT des requêtes SELECT (lecture seule)
+- Pour rechercher du texte, TOUJOURS utiliser : unaccent(LOWER(colonne)) ILIKE '%motcle% limit 2;'
+- Ne jamais utiliser LIKE seul (insensible aux accents requis)
 
-Quelques exemples de données disponibles :
-- **Nom commercial**: Nom du médicament tel qu'il est commercialisé.
-- **DCI (Dénomination Commune Internationale)**: Peut contenir un ou plusieurs principes actifs séparés par '+' (ex: 'IBUPROFENE+PARACETAMOL+CAFEINE').
-- **Similarité avec la base française**: La similarité par rapport à une base de données française.
-- **Score de similarité**: Un score mesurant la similarité entre le médicament et d'autres médicaments dans la base.
-- **Pays fournisseur**: Le pays qui fournit le médicament.
-- **Statut d'autorisation**: Le statut réglementaire du médicament (par exemple, approuvé, en attente).
-
-** important: **
-- utilise toujours en cas de recherche des requetes de la forme : unaccent(LOWER(dci)) ILIKE '%motcle%' ou unaccent(LOWER(nom_commercial_ci)) ILIKE '%motcle%'.
-`,
+**Exemples de requêtes valides :**
+- Recherche par DCI : SELECT * FROM medicaments WHERE unaccent(LOWER(dci)) ILIKE '%paracetamol%' LIMIT 2;
+- Recherche par nom : SELECT * FROM medicaments WHERE unaccent(LOWER(nom_commercial_ci)) ILIKE '%doliprane%' LIMIT 2;
+- Comptage : SELECT COUNT(*) FROM medicaments WHERE unaccent(LOWER(dci)) ILIKE '%ibuprofene%';
+- Médicaments d'un pays : SELECT nom_commercial_ci, dci FROM medicaments WHERE unaccent(LOWER(pays_fournisseur)) ILIKE '%france%' LIMIT 2;`,
   
   inputSchema: z.object({
-    query: z.string().describe("La requête SQL à exécuter. Elle doit être une requête SELECT valide pour PostgreSQL."),
+    query: z.string().describe("Requête SQL SELECT valide pour PostgreSQL avec unaccent et ILIKE pour les recherches textuelles"),
   }),
   
   execute: async ({ query }) => {
-      try {
-      console.log(`Exécution de la requête SQL générée par l'IA : ${query}`);
+    try {
+      // Validation basique de sécurité
+      const normalizedQuery = query.trim().toUpperCase();
+      if (!normalizedQuery.startsWith('SELECT')) {
+        return { error: "Seules les requêtes SELECT sont autorisées" };
+      }
+      
+      if (normalizedQuery.includes('DROP') || 
+          normalizedQuery.includes('DELETE') || 
+          normalizedQuery.includes('UPDATE') ||
+          normalizedQuery.includes('INSERT')) {
+        return { error: "Requête interdite : seules les lectures sont autorisées" };
+      }
+      
+      console.log(`[SQL QUERY] Executing: ${query}`);
+      
       const result = await db.execute(sql.raw(query));
-      console.log("Résultat de la requête :", result);
-      // Convertir le résultat en une chaîne JSON pour que le modèle puisse le traiter plus facilement.
-      return JSON.stringify(result);
+      
+      console.log(`[SQL QUERY] Returned ${result.length || 0} rows`);
+      
+      if (!result || result.length === 0) {
+        return "Aucun résultat trouvé dans la base de données pour cette requête.";
+      }
+      
+      const output = JSON.stringify(result, null, 2)
+      console.log(`[SQL tool] Returned this results :  ${output}`);
+      return output;
+      
     } catch (error) {
-      console.error("Erreur lors de l'exécution de la requête SQL :", error);
-      // Retourne l'erreur à l'IA
-      return { error: `Erreur d'exécution: ${(error as Error).message}` };
-    }}
-
-  })
-  
-
-
-
-
-
-
-
-
-
+      console.error("[SQL QUERY] Error:", error);
+      return { 
+        error: `Erreur SQL : ${(error as Error).message}`,
+        suggestion: "Vérifie la syntaxe et utilise unaccent(LOWER(colonne)) ILIKE '%terme%' pour les recherches textuelles"
+      };
+    }
+  }
+});
