@@ -82,6 +82,8 @@ graph TB
     style G fill:#fff3e0
 ```
 
+Note : Une intégration future du BM25
+
 ## 🚀 **Démarrage Rapide**
 
 ### **Prérequis**
