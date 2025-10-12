@@ -1,124 +1,232 @@
-add :
+# 🏥 **Medicament-AICe** - Système Intelligent d'Information sur les Médicaments
 
-- BM25 search : https://js.langchain.com/docs/integrations/retrievers/bm25/
-- tavily : https://docs.tavily.com/documentation/integrations/vercel
+<div align="center">
 
-### **Projet Medicament-AICe**
+![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Next.js](https://img.shields.io/badge/Next.js-14-black)
+![AI](https://img.shields.io/badge/AI-Vercel_SDK-green)
+![License](https://img.shields.io/badge/license-MIT-lightgrey.svg)
 
-Le projet vise à créer un système de questions-réponses intelligent sur les médicaments, basé sur des données structurées (Excel), non structurées (PDF) et des sources web fiables.
+**Une plateforme IA révolutionnaire pour l'information pharmaceutique**
 
-### **Stack Technique**
+[🚀 Démarrage Rapide](#-démarrage-rapide) • [📋 Fonctionnalités](#-fonctionnalités) • [🛠️ Architecture](#️-architecture) • [🎯 Use Cases](#-use-cases)
 
-- **Framework** : Next.js
-- **IA** : Vercel AI SDK, OpenAI GPT-4
-- **Base de données** : PostgreSQL avec l'extension pgvector
-- **ORM** : Drizzle ORM
-- **Déploiement** : Vercel
+</div>
 
----
+## 🌟 **Aperçu du Projet**
 
-### Use cases :
+Medicament-AICe est un système expert intelligent conçu pour fournir des informations précises et actualisées sur les médicaments en Côte d'Ivoire. En combinant l'analyse de données structurées, la recherche documentaire et l'intelligence artificielle, la plateforme répond aux besoins des professionnels de santé et du grand public.
 
-- **1-statistiques sur la base de données**: combien de médicament existe dans la base de données ?
-- **2-questions sur un médicament, un dci,... statut d'autorisation, spécifique au cote d'ivoire** : "Liste les médicaments ayant le DCI 'Paracétamol' -**3-question d'ordre général**: grace à notre agent qui fait des recherches dans une documentation pharmaceutique bien précise et qui a accès au site web bien reconnue..
+### **✨ Points Forts**
 
-### **Étapes du Projet**
+- 🔍 **Recherche Hybride** : Combinaison BM25 + Recherche Vectorielle
+- 🌐 **Actualisation Temps Réel** : Intégration Tavily pour les données web
+- 💊 **Spécialisé Côte d'Ivoire** : Données locales et réglementations
+- 🤖 **Agent IA Intelligent** : Réponses contextuelles et précises
 
-#### **Phase 1 : Fondation des Données Structurées (Excel → Postgres)**
+## 🛠️ **Stack Technique**
 
-- [x] **Définir le schéma de la table `medicaments`** dans `lib/db/schema/medicaments.ts`.
-- [x] **Créer le script d'importation** dans `scripts/import-excel.ts`.
-- **Ajouter l'extension vector a postgres avec la commande :** `CREATE EXTENSION IF NOT EXISTS vector;`
-- [ ] **Exécuter la migration de la base de données**.
-- [ ] **Exécuter le script d'importation**.
+| Composant | Technologie | Usage |
+|-----------|-------------|-------|
+| **Framework** | ![Next.js](https://img.shields.io/badge/Next.js-14-black) | Application Full-Stack |
+| **IA/ML** | ![Vercel AI SDK](https://img.shields.io/badge/Vercel_AI_SDK-Latest-green) | Orchestration IA |
+| **Modèles** | ![Google Gemini](https://img.shields.io/badge/Google_Gemini-2.0_flash--lite-orange) | Modèle Principal |
+| **Base de Données** | ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-blue) | Données Structurées |
+| **Recherche** | ![pgvector](https://img.shields.io/badge/pgvector-0.7.0-green) | Embeddings & Similarité |
+| **Recherche Texte** | ![BM25](https://img.shields.io/badge/BM25-LangChain-yellow) | Recherche Lexicale |
+| **Recherche Web** | ![Tavily](https://img.shields.io/badge/Tavily-API-purple) | Données Actualisées |
+| **ORM** | ![Drizzle](https://img.shields.io/badge/Drizzle_ORM-0.30-blue) | Gestion Base de Données |
 
-#### **Phase 2 : Fondation des Données Non Structurées (PDF → Vecteurs)**
+## 🎯 **Use Cases Principaux**
 
-- [ ] **Mettre en place `pgvector`**.
-- [ ] **Créer le script de traitement et d'importation des PDF**.
+### 📊 **1. Statistiques Base de Données**
+```bash
+"Combien de médicaments existe-t-il dans la base ?"
+"Quelle est la répartition par laboratoire ?"
+```
 
-#### **Phase 3 : Création des Outils pour l'IA**
+### 💊 **2. Recherche Médicaments Spécifiques**
+```bash
+"Liste les médicaments ayant le DCI 'Paracétamol'"
+"Quels sont les médicaments autorisés pour le diabète ?"
+"Statut d'autorisation de l'Amoxicilline en Côte d'Ivoire"
+```
 
-- [ ] **Développer l'outil de requête SQL**.
-- [ ] **Développer l'outil de recherche vectorielle**.
-- [ ] **Développer l'outil de recherche web**.
+### 🔍 **3. Questions Générales & Documentation**
+```bash
+"Interactions médicamenteuses du Paracétamol"
+"Posologie recommandée pour un adulte"
+"Contre-indications des AINS"
+```
 
-#### **Phase 4 : Orchestration et API**
+## 🏗️ **Architecture du Système**
 
-- [ ] **Mettre à jour la route `/api/chat/route.ts`**.
-- [ ] **Affiner le "System Prompt" de l'IA**.
-- [ ] **Tester l'API de bout en bout**.
+```mermaid
+graph TB
+    A[Utilisateur] --> B[API Next.js]
+    B --> C[Agent IA Vercel]
+    C --> D[Base PostgreSQL]
+    C --> E[Recherche Vectorielle]
+    C --> F[BM25 Search]
+    C --> G[Tavily Web Search]
+    D --> H[Données Structurées Excel]
+    E --> I[Documents PDF]
+    F --> I
+    G --> J[Sources Web Fiables]
+    
+    style A fill:#e1f5fe
+    style C fill:#f3e5f5
+    style D fill:#e8f5e8
+    style E fill:#fff3e0
+    style F fill:#fff3e0
+    style G fill:#fff3e0
+```
 
----
+## 🚀 **Démarrage Rapide**
 
-### **Comment lancer le projet**
+### **Prérequis**
 
-#### **Installation des dépendances**
+- Node.js 
+- PostgreSQL
+- Compte [Tavily](https://tavily.com/) pour la recherche web et Gemini API
 
-1. Installe toutes les dépendances avec la commande suivante :
-
-   ```bash
-   npm install
-   ```
-
-#### **Configuration de l'environnement**
-
-1. Copie `.env.example` vers `.env` et remplis les variables suivantes :
-
-   - `DATABASE_URL="postgres://USER:PASSWORD@HOST:PORT/DATABASE"`
-   - `OPENAI_API_KEY="sk-..."`
-
-#### **Migration de la base de données**
-
-1. ajouter les extensions vectors pour traiter les embeddings et unaccent pour enlever la sensibilié à la casse :
-
-`CREATE EXTENSION IF NOT EXISTS unaccent;`
-`CREATE EXTENSION IF NOT EXISTS vector;`
-
-2.  Cette commande va créer les tables dans ta base de données en se basant sur les schémas définis dans `lib/db/schema/` :
+### **📥 Installation**
 
 ```bash
+# Cloner le repository
+git clone https://github.com/your-org/medicament-aice.git
+cd medicament-aice
+
+# Installer les dépendances
+npm install
+
+# Configuration environnement
+cp .env.example .env
+```
+
+### **⚙️ Configuration Environnement**
+
+```env
+# Database
+DATABASE_URL="postgres://user:password@localhost:5432/medicament_aice"
+
+# AI Providers
+GOOGLE_API_KEY="your-google-api-key"
+TAVILY_API_KEY="your-tavily-api-key"
+```
+
+### **🗄️ Configuration Base de Données**
+
+```sql
+-- Activer les extensions nécessaires
+CREATE EXTENSION IF NOT EXISTS unaccent;
+CREATE EXTENSION IF NOT EXISTS vector;
+```
+
+```bash
+# Générer et exécuter les migrations
 npm run db:generate
 npm run db:migrate
 ```
 
-#### **Importer les données initiales**
+### **📊 Import des Données**
 
-1. Place ton fichier Excel sous le nom `medicaments_ci.xlsx` à la racine du projet.
-2. Installe le package `xlsx` pour gérer l'import :
+```bash
+# Placer le fichier Excel à la racine
+cp /chemin/vers/medicaments_ci.xlsx .
 
-   ```bash
-   npm install -D xlsx
-   ```
+# Installer le processeur Excel
+npm install -D xlsx
 
-3. Lance le script d'importation des données avec :
+# Importer les données
+npx tsx scripts/import-excel.ts
+```
 
-   ```bash
-   npx tsx scripts/import-excel.ts
-   ```
+### **🎮 Lancement**
 
-#### **Lancer le serveur de développement**
+```bash
+# Mode développement
+npm run dev
 
-1. Enfin, pour démarrer ton projet en mode développement :
+# Vérifier le statut de l'API
+curl http://localhost:3000/api/chat
+```
 
-   ```bash
-   npm run dev
-   ```
-
----
-
-The API should now be running on [http://localhost:3000](http://localhost:3000).
-
-Check dans un premier lieu le API qui indique le bon fonctionnement de l'application :
-
-envoie avec un GET : http://localhost:3000/api/chat --> tu vas recevoir une réponse :
-
+**Réponse attendue :**
+```json
 {
-"message": "Ton API pour RAG est healthy"
+  "message": "Ton API pour RAG est healthy"
 }
+```
 
-### Informations sur le projet
+## 📁 **Structure du Projet**
 
-#### dossier : data
+```
+medicament-aice/
+├── 📁 app/
+│   └── 📁 api/chat/
+│       └── route.ts              # Route principale de l'agent IA
+├── 📁 lib/
+│   ├── 📁 ai/
+│   │   └── 📁 tools/
+│   │       ├── sql-tool.ts       # Requêtes base de données
+│   │       ├── vector-search-tool.ts # Recherche vectorielle
+│   │       └── web-search-tool.ts    # Recherche web Tavily
+│   └── 📁 db/
+│       └── 📁 schema/
+│           └── medicaments.ts    # Schéma base de données
+├── 📁 scripts/
+│   ├── import-excel.ts           # Import données Excel
+│   └── process-pdfs.ts           # Traitement documents PDF
+├── 📁 data/
+│   ├── medicaments_ci.xlsx       # Base données médicaments
+│   └── 📁 documents/             # Documentation de référence
+└── 📄 .env.example               # Variables d'environnement
+```
 
-il contient tous les données de notre projet, y compris la base de données ivoirienne (medicaments_ci.xlsx), aussi les documents de référence que nous allons utiliser dans notre système du RAG.
+## 🔧 **Intégrations Avancées**
+
+
+### **🌐 Recherche Web avec Tavily**
+
+```typescript
+import { TavilySearchResults } from "@langchain/community/tools/tavily_search";
+
+const tavilyTool = new TavilySearchResults({
+  apiKey: process.env.TAVILY_API_KEY,
+  maxResults: 5,
+  searchDepth: "advanced",
+  includeAnswer: true,
+});
+```
+
+## 📊 **Phases de Développement**
+
+### **✅ Phase 1 : Données Structurées (COMPLÉTÉE)**
+- [x] Schéma base de données
+- [x] Script import Excel
+- [x] Migrations PostgreSQL
+
+### **🔄 Phase 2 : Données Non Structurées**
+- [ ] Intégration pgvector
+- [ ] Traitement documents PDF
+- [ ] Génération embeddings
+
+### **⏳ Phase 3 : Outils IA**
+- [ ] Outil requêtes SQL intelligent
+- [ ] Recherche vectorielle hybride
+- [ ] Intégration recherche web
+
+### **⏳ Phase 4 : Orchestration**
+- [ ] Agent IA multi-outils
+- [ ] Prompt engineering avancé
+- [ ] Tests end-to-end
+
+
+<div align="center">
+
+**Développé par othman K**
+
+[Documentation Technique](#) • [API Reference](#) • [Changelog](#)
+
+</div>
