@@ -13,8 +13,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Next Chatbot",
-  description: "Vercel AI SDK Chatbot Example",
+  title: "Next pharmacy AI assistant",
+  description: "Crée avec Vercel AI SDK ",
 };
 
 export default function RootLayout({

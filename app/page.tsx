@@ -1,8 +1,5 @@
 'use client';
-
-import Footer from '@/components/main/footer';
 import ThemeButton from '@/components/main/ThemeButton';
-
 import {
   Conversation,
   ConversationContent,
@@ -34,7 +31,6 @@ import {
   Actions,
   Action,
 } from '@/components/ai-elements/actions';
-import { FileUIPart } from 'ai';
 
 import { RefreshCcwIcon, CopyIcon } from 'lucide-react';
 
@@ -109,7 +105,10 @@ const ChatBotDemo = () => {
   return (
     
     <div className="max-w-4xl mx-auto p-6 relative size-full h-screen">
-      <h1 className="text-4xl font-bold mb-4"><center> Next.js AI Chatbot By ROUGUI Othmane </center></h1>
+      <h1 className="text-4xl font-bold mb-4"><center> Next.js AI pharmaceutic assistant By Othmane K </center></h1>
+      <h3 ><center>Il s'agit d'une interface pour faire les tests</center></h3>
+      <h6 ><center>Pour tout détail consultez les descriptifs en jointure ou contactez moi</center></h6>
+
       <div className='flex gap-1'>
               <ThemeButton />
               <button onClick={() => setConfigureOpen(true)}>
@@ -216,21 +215,8 @@ const ChatBotDemo = () => {
                 </PromptInputActionMenuContent>
               </PromptInputActionMenu>
               
-              <PromptInputButton
-                onClick={() => setUseMicrophone(!useMicrophone)}
-                variant={useMicrophone ? 'default' : 'ghost'}
-              >
-                <MicIcon size={16} />
-                <span className="sr-only">Microphone</span>
-              </PromptInputButton>
 
-              <PromptInputButton
-                variant={webSearch ? 'default' : 'ghost'}
-                onClick={() => setWebSearch(!webSearch)}
-              >
-                <GlobeIcon size={16} />
-                <span>Search</span>
-              </PromptInputButton>
+              
               <PromptInputModelSelect
                 onValueChange={(value) => {
                   setModel(value);
@@ -249,25 +235,12 @@ const ChatBotDemo = () => {
                 </PromptInputModelSelectContent>
               </PromptInputModelSelect>
 
-              <input
-                    type="file"
-                    onChange={(event) => {
-                      if (event.target.files) {
-                        setFiles(event.target.files);
-                      }
-                    }}
-                    multiple
-                    accept="application/pdf,image/*"
-                    ref={fileInputRef}
-                    className="hidden"
-                  />
 
             </PromptInputTools>
             <PromptInputSubmit disabled={!input && !status} status={status} />
           </PromptInputToolbar>
         </PromptInput>
       </div>
-      <Footer />
     </div>
   );
 };
